@@ -1,15 +1,22 @@
-# React-js Drawer
+# React-js-Drawer
 
 - Add native feeling to your web app and PWA by replicating Android native drawer.
 - Swipe from the screen edge to open the drawer.
 - Detect swipe momentum to open/close the drawer.
 - Swipe gesture avilable for touch and mouse input.
 
+[![](https://github.com/alabsi91/React-js-Drawer/blob/readme/UniConverter_20211001151937.gif?raw=true)]
+
+## Installation
+
+`npm install React-js-Drawer`
+
 ## How to use
 
 - Make sure to put the drawer on the top of your main page.
 
 ```
+import Drawer from 'React-js-Drawer';
 
 export default function Index() {
 
@@ -33,7 +40,7 @@ export default function Index() {
         
         </>
     );
-}
+};
 ```
 
 ## Props
