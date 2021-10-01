@@ -1,8 +1,9 @@
 {
   "name": "react-js-drawer",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Add native feeling to your web app and PWA by replicating Android native drawer",
-  "main": "Drawer.js",
+  "main": "react-js-drawer.js",
+  "types": "react-js-drawer.d.ts",
   "scripts": {
     "publish": "npm publish"
   },
