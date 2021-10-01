@@ -63,7 +63,13 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
   const time_max = 300;
   const input_distance = 30;
   const [useAnimation, setUseAnimation] = (0, _react.useState)(true);
-  const [isOpen, setIsOpen] = (0, _react.useState)(default_Status !== 'closed'); // Mouse inputs
+  const [isOpen, setIsOpen] = (0, _react.useState)(default_Status !== 'closed');
+  (0, _react.useEffect)(() => {
+    document.body.style.overflow = isOpen ? 'hidden' : 'auto';
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isOpen]); // Mouse inputs
 
   const drawer_handle_onMove = (0, _react.useCallback)(e => {
     const drawer = document.getElementById('Drawer_Wrapper');

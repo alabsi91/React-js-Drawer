@@ -12,7 +12,6 @@
   padding: 0px;
   overflow-x: hidden;
   overflow-y: scroll;
-  touch-action: none;
 }
 #Drawer_Container::-webkit-scrollbar {
   width: 7px;
@@ -25,6 +24,7 @@
 
 #Drawer_handle {
   height: 100%;
+  touch-action: none;
 }
 #Drawer-Background {
   position: fixed;
