@@ -1,4 +1,4 @@
-# React-js-Drawer
+# react-js-drawer
 
 - Add native feeling to your web app and PWA by replicating Android native drawer.
 - Swipe from the screen edge to open the drawer.
@@ -9,14 +9,14 @@
 
 ## Installation
 
-`npm install React-js-Drawer`
+`npm install react-js-drawer`
 
 ## How to use
 
 - Make sure to put the drawer on the top of your main page.
 
 ```
-import Drawer from 'React-js-Drawer';
+import Drawer from 'react-js-drawer';
 
 export default function Index() {
 
