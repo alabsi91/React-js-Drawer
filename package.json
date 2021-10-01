@@ -1,0 +1,26 @@
+{
+  "name": "react-js-drawer",
+  "version": "1.0.2",
+  "description": "Add native feeling to your web app and PWA by replicating Android native drawer",
+  "main": "react-js-drawer.js",
+  "types": "react-js-drawer.d.ts",
+  "scripts": {
+    "publish": "npm publish"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alabsi91/React-js-Drawer.git"
+  },
+  "keywords": [
+    "react",
+    "drawer",
+    "reactjs",
+    "navigation"
+  ],
+  "author": "Ahmed Alabsi",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alabsi91/React-js-Drawer/issues"
+  },
+  "homepage": "https://github.com/alabsi91/React-js-Drawer#readme"
+}
