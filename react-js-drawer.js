@@ -11,7 +11,7 @@ require("core-js/modules/es.parse-int.js");
 
 require("core-js/modules/es.promise.js");
 
-require("./Drawer.css");
+require('./react-js-drawer.css');
 
 var _react = _interopRequireWildcard(require("react"));
 
