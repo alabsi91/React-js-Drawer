@@ -68,7 +68,8 @@ export default function Index() {
 - standard : show the drawer beside the page (effects the page layout).
 - **Default Value** 'modal'
 
-## standardOptions : _[Object] [optional]_
+### standardOptions : _[Object] [optional]_
+
 - Options for drawer type standard.
 - `changePageWidth?: boolean` chrink the page width to fit the drawer when it's open (co-planar with page content). (default : false)
 - `preventPageScrolling?: boolean` Prevent the page from scrolling when the drawer is open. (default : true)
