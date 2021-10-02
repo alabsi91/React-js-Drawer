@@ -1,4 +1,4 @@
-import './Drawer.css';
+import './react-js-drawer.css';
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useState } from 'react';
 
 let x, y, t, isSwipe, siblings;
