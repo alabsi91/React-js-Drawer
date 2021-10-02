@@ -151,7 +151,21 @@ type NamedColor =
     | "yellow"
     | "yellowgreen";
 
-export interface DrawerProps {
+interface standardOptions {
+    /**
+     * - chrink the page width to fit the drawer when it's open (co-planar with page content).
+     * - **Default Value** false
+     */
+    changePageWidth?: boolean;
+
+    /**
+     * - Prevent the page from scrolling when the drawer is open.
+     * - **Default Value** true
+     */
+    preventPageScrolling?: boolean;
+}
+
+interface DrawerProps {
 
     /**
      * - Position the drawer on the left or on the right side of the Html page.
@@ -164,6 +178,18 @@ export interface DrawerProps {
      * - **Default Value** 'closed'
      */
     defaultStatus?: 'closed' | 'open';
+
+    /**
+     * - modal : show the drawer over the page (deosn't effect the page layout).
+     * - standard : show the drawer beside the page (effects the page layout).
+     * - **Default Value** 'modal'
+     */
+    type?: 'modal' | 'standard';
+
+    /**
+     * - Standard type drawer behaviour options.
+     */
+    standardOptions?: standardOptions;
 
     /**
      * - The drawer width when it's open.
