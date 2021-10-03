@@ -144,6 +144,7 @@ const Drawer = forwardRef((props, ref) => {
         if (e.clientX >= drawer_current_pos - 1) drawer_handle_onMouseUp(e);
       }
     },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [handle_width, direction, width, isOpen, set_siblings_style]
   );
 

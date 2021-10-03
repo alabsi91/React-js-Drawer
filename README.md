@@ -72,7 +72,6 @@ export default function Index() {
 
 ### standardOptions : _[Object] [optional]_
 
-<<<<<<< HEAD
 - Options for drawer type `standard` .
 - `changePageWidth?: boolean` chrink the page width to fit the drawer when it's open (co-planar with page content). (default :
   false)
@@ -81,10 +80,6 @@ export default function Index() {
 ### modalOptions : _[Object] [optional]_
 
 - Options for drawer type `modal` .
-=======
-- Options for drawer type standard.
-- `changePageWidth?: boolean` chrink the page width to fit the drawer when it's open (co-planar with page content). (default : false)
->>>>>>> 1889b2ea415bf57d4c92f96a4646e4a9bfd956df
 - `preventPageScrolling?: boolean` Prevent the page from scrolling when the drawer is open. (default : true)
 
 ### direction : _['left' | 'right'] [optional]_
