@@ -13,6 +13,9 @@ const Drawer = forwardRef((props, ref) => {
     changePageWidth: props.standardOptions?.changePageWidth ?? false,
     preventPageScrolling: props.standardOptions?.preventPageScrolling ?? true,
   };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const modal_drawer_options = { preventPageScrolling: props.modalOptions?.preventPageScrolling ?? true };
+
   const direction = props.direction || 'left';
   const default_Status = props.defaultStatus || 'closed';
   const handle_width = props.handleWidth ?? 10;
@@ -86,7 +89,10 @@ const Drawer = forwardRef((props, ref) => {
   );
 
   useEffect(() => {
-    if (standard_drawer_options.preventPageScrolling) {
+    if (
+      (standard_drawer_options.preventPageScrolling && drawer_type === 'standard') ||
+      (modal_drawer_options.preventPageScrolling && drawer_type === 'modal')
+    ) {
       document.body.style.overflow = isOpen ? 'hidden' : 'auto';
       document.getElementById('Drawer_Wrapper').parentElement.style.overflow = isOpen ? 'hidden' : 'auto';
 
@@ -95,7 +101,7 @@ const Drawer = forwardRef((props, ref) => {
         document.getElementById('Drawer_Wrapper').parentElement.style.overflow = 'auto';
       };
     }
-  }, [isOpen, standard_drawer_options]);
+  }, [isOpen, standard_drawer_options, drawer_type, modal_drawer_options]);
 
   useLayoutEffect(() => {
     get_sibling();
@@ -123,7 +129,8 @@ const Drawer = forwardRef((props, ref) => {
             (window.innerWidth - e.clientX) +
             (isOpen ? width - handle_width / 2 - (window.innerWidth - x) : -scroll_width);
 
-      move_width = move_width >= 0 ? 0 : move_width;
+      move_width = Math.min(Math.max(move_width, -(width - handle_width)), 0);
+
       drawer.style[direction] = move_width + 'px';
       set_siblings_style(move_width + width - handle_width);
 
@@ -252,7 +259,8 @@ const Drawer = forwardRef((props, ref) => {
             (window.innerWidth - e.targetTouches[0].pageX) +
             (isOpen ? width + handle_width - (window.innerWidth - x) : handle_width);
 
-      move_width = move_width >= 0 ? 0 : move_width;
+      move_width = Math.min(Math.max(move_width, -(width - handle_width)), 0);
+
       // change shaded background on drawer move.
       const move_percentage = ((move_width + width) * 100) / width;
       if (background) background.style.opacity = move_percentage / 100;
@@ -345,7 +353,7 @@ const Drawer = forwardRef((props, ref) => {
       let move_width =
         direction === 'left' ? -width + e.targetTouches[0].pageX : -width + (window.innerWidth - e.targetTouches[0].pageX);
 
-      move_width = move_width >= 0 ? 0 : move_width;
+      move_width = Math.min(Math.max(move_width, -(width - handle_width)), 0);
 
       // change shaded background on drawer move.
       const move_percentage = ((move_width + width) * 100) / width;

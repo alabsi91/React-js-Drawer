@@ -164,6 +164,13 @@ interface standardOptions {
      */
     preventPageScrolling?: boolean;
 }
+interface modalOptions {
+    /**
+     * - Prevent the page from scrolling when the drawer is open.
+     * - **Default Value** true
+     */
+    preventPageScrolling?: boolean;
+}
 
 interface DrawerProps {
 
@@ -190,6 +197,11 @@ interface DrawerProps {
      * - Standard type drawer behaviour options.
      */
     standardOptions?: standardOptions;
+
+    /**
+     * - Standard type drawer behaviour options.
+     */
+    modalOptions?: modalOptions;
 
     /**
      * - The drawer width when it's open.

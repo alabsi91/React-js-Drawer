@@ -8,6 +8,7 @@
 ![](https://github.com/alabsi91/React-js-Drawer/blob/readme/UniConverter_20211001151937.gif?raw=true)
 
 # Drawer type standard
+
 - When `changePageWidth = true` the drawer shares the body width with the page (the page shrinks when drawer opens).
 
 ![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawertypestandardwidthenabled.png)
@@ -17,6 +18,7 @@
 ![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawertypestandardwidthdisabled.png)
 
 # Drawer type modal
+
 - The Drawer will appear on the top off the page.
 
 ![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawermodal.png)
@@ -44,16 +46,16 @@ export default function Index() {
     return (
         <>
             <Drawer ref={node => (drawerMethods = node)}>
-                
+
                 // ... drawer content
-                
+
             </Drawer>
-            
+
             <div>  // wrap the page contents with container
-            
+
                 // ... page contents
-                <button onClick={openDrawerHandle}>Open Drawer</button> 
-                
+                <button onClick={openDrawerHandle}>Open Drawer</button>
+
             </div>
         </>
     );
@@ -68,9 +70,16 @@ export default function Index() {
 - standard : show the drawer beside the page (effects the page layout).
 - **Default Value** 'modal'
 
-## standardOptions : _[Object] [optional]_
-- Options for drawer type standard.
-- `changePageWidth?: boolean` chrink the page width to fit the drawer when it's open (co-planar with page content). (default : false)
+### standardOptions : _[Object] [optional]_
+
+- Options for drawer type `standard` .
+- `changePageWidth?: boolean` chrink the page width to fit the drawer when it's open (co-planar with page content). (default :
+  false)
+- `preventPageScrolling?: boolean` Prevent the page from scrolling when the drawer is open. (default : true)
+
+### modalOptions : _[Object] [optional]_
+
+- Options for drawer type `modal` .
 - `preventPageScrolling?: boolean` Prevent the page from scrolling when the drawer is open. (default : true)
 
 ### direction : _['left' | 'right'] [optional]_
@@ -92,8 +101,7 @@ export default function Index() {
 
 - The drawer handle width, the handle is unvisible element that receive swipe gesture input when the drawer is close.
 - **Default Value** 10
-- 
-![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawerclosed.png)
+- ![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawerclosed.png)
 
 ### handleBackgroundColor : _[String] [optional]_
 
