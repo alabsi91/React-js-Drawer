@@ -32,7 +32,7 @@
 - Make sure to put the drawer on the top of your main page.
 - The drawer should have one sibling element for stability.
 
-```
+```javascript
 import Drawer from 'react-js-drawer';
 
 export default function Index() {
