@@ -127,7 +127,7 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
     const drawer_current_pos = drawer.getBoundingClientRect()[direction === 'left' ? 'right' : 'left'];
     const scroll_width = window.innerWidth - document.body.scrollWidth; // the value that change drawer position (track)
 
-    let move_width = direction === 'left' ? -(width - handle_width / 2) + e.clientX + (isOpen ? width - handle_width / 2 - x : 0) : -(width - handle_width / 2) + (window.innerWidth - e.clientX) + (isOpen ? width - handle_width / 2 - (window.innerWidth - x) : -scroll_width);
+    let move_width = direction === 'left' ? -(width - handle_width) + e.clientX + (isOpen ? width - handle_width / 2 - x : 0) : -(width - handle_width) + (window.innerWidth - e.clientX) + (isOpen ? width - handle_width / 2 - (window.innerWidth - x) : -scroll_width);
     move_width = Math.min(Math.max(move_width, -(width - handle_width)), 0);
     drawer.style[direction] = move_width + 'px';
     set_siblings_style(move_width + width - handle_width);
