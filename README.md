@@ -36,30 +36,26 @@
 import Drawer from 'react-js-drawer';
 
 export default function Index() {
+  let drawerMethods = null;
 
-    let drawerMethods = null;
+  const openDrawerHandle = () => {
+    drawerMethods.open();
+  };
 
-    const openDrawerHandle = () => {
-        drawerMethods.open();
-    };
-
-    return (
-        <>
-            <Drawer ref={node => (drawerMethods = node)}>
-
-                // ... drawer content
-
-            </Drawer>
-
-            <div>  // wrap the page contents with container
-
-                // ... page contents
-                <button onClick={openDrawerHandle}>Open Drawer</button>
-
-            </div>
-        </>
-    );
-};
+  return (
+    <>
+      <Drawer ref={node => (drawerMethods = node)}>
+        // ... drawer content
+      </Drawer>
+      
+      // wrap the page contents with container
+      <div>
+        // ... page contents
+        <button onClick={openDrawerHandle}>Open Drawer</button>
+      </div>
+    </>
+  );
+}
 ```
 
 ## Props

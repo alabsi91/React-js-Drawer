@@ -124,8 +124,8 @@ const Drawer = forwardRef((props, ref) => {
       // the value that change drawer position (track)
       let move_width =
         direction === 'left'
-          ? -(width - handle_width / 2) + e.clientX + (isOpen ? width - handle_width / 2 - x : 0)
-          : -(width - handle_width / 2) +
+          ? -(width - handle_width) + e.clientX + (isOpen ? width - handle_width / 2 - x : 0)
+          : -(width - handle_width) +
             (window.innerWidth - e.clientX) +
             (isOpen ? width - handle_width / 2 - (window.innerWidth - x) : -scroll_width);
 
