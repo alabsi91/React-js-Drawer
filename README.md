@@ -44,10 +44,7 @@ export default function Index() {
 
   return (
     <>
-      <Drawer ref={node => (drawerMethods = node)}>
-        // ... drawer content
-      </Drawer>
-      
+      <Drawer ref={node => (drawerMethods = node)}>// ... drawer content</Drawer>
       // wrap the page contents with container
       <div>
         // ... page contents
@@ -71,12 +68,12 @@ export default function Index() {
 - Options for drawer type `standard` .
 - `changePageWidth?: boolean` chrink the page width to fit the drawer when it's open (co-planar with page content). (default :
   false)
-- `preventPageScrolling?: boolean` Prevent the page from scrolling when the drawer is open. (default : true)
+- `preventPageScrolling?: boolean` Prevent the page from scrolling when the drawer is open. (default : false)
 
 ### modalOptions : _[Object] [optional]_
 
 - Options for drawer type `modal` .
-- `preventPageScrolling?: boolean` Prevent the page from scrolling when the drawer is open. (default : true)
+- `preventPageScrolling?: boolean` Prevent the page from scrolling when the drawer is open. (default : false)
 
 ### direction : _['left' | 'right'] [optional]_
 
@@ -96,7 +93,7 @@ export default function Index() {
 ### handleWidth : _[Number] [optional]_
 
 - The drawer handle width, the handle is unvisible element that receive swipe gesture input when the drawer is close.
-- **Default Value** 10
+- **Default Value** 20
 - ![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawerclosed.png)
 
 ### handleBackgroundColor : _[String] [optional]_
@@ -109,9 +106,20 @@ export default function Index() {
 - The drawer open and close animation duration.
 - **Default Value** 200
 
-### ease : _[String] [optional]_
+### ease : _[String | Function] [optional]_
 
-- Drawer open and close animation transition timing function (CSS Value).
+- Drawer open and close animation transition timing function.
+- Easing functions specify the rate of change of the number over time.
+- Avaliable Easing functions :
+  `"linear", "easeInSine", "easeOutSine", "easeInOutSine", "easeInQuad", "easeOutQuad", "easeInOutQuad", "easeInCubic", "easeOutCubic", "easeInOutCubic", "easeInQuart", "easeOutQuart", "easeInOutQuart", "easeInQuint", "easeOutQuint", "easeInOutQuint", "easeInExpo", "easeOutExpo", "easeInOutExpo", "easeInCirc", "easeOutCirc", "easeInOutCirc", "easeInBack", "easeOutBack", "easeInOutBack", "easeInElastic", "easeOutElastic", "easeInOutElastic", "easeInBounce", "easeOutBounce", "easeInOutBounce"`
+- If you want to provide your own timing-function make sure that the function takes one parameter and returns one value.
+
+```javascript
+function easeInQuad(x) {
+  return x * x;
+}
+```
+
 - **Default Value** 'ease-out'
 
 ### enableMouseGestures : _[Boolean] [optional]_
@@ -122,6 +130,11 @@ export default function Index() {
 ### enableTouchGestures : _[Boolean] [optional]_
 
 - Enable open and close drawer with touch swipe gestures.
+- **Default Value** true
+
+### scrollBarCustomStyle : _[Boolean] [optional]_
+
+- Enable drawer container scrollbar custom style.
 - **Default Value** true
 
 ### backgroundColor : _[Srting] [optional]_
@@ -140,7 +153,10 @@ export default function Index() {
 ### onClose : _[Callback] [optional]_
 
 - A callback fired when the drawer closes.
+### zIndex : _[Number] [optional]_
 
+- Drawer wraper z-index css value.
+- **Default Value** 100
 ## Methods
 
 - `open()`

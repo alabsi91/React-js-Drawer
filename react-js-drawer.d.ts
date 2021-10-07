@@ -151,6 +151,8 @@ type NamedColor =
     | "yellow"
     | "yellowgreen";
 
+type requestFrameEasing = "linear" | "easeInSine" | "easeOutSine" | "easeInOutSine" | "easeInQuad" | "easeOutQuad" | "easeInOutQuad" | "easeInCubic" | "easeOutCubic" | "easeInOutCubic" | "easeInQuart" | "easeOutQuart" | "easeInOutQuart" | "easeInQuint" | "easeOutQuint" | "easeInOutQuint" | "easeInExpo" | "easeOutExpo" | "easeInOutExpo" | "easeInCirc" | "easeOutCirc" | "easeInOutCirc" | "easeInBack" | "easeOutBack" | "easeInOutBack" | "easeInElastic" | "easeOutElastic" | "easeInOutElastic" | "easeInBounce" | "easeOutBounce" | "easeInOutBounce";
+
 interface standardOptions {
     /**
      * - chrink the page width to fit the drawer when it's open (co-planar with page content).
@@ -160,14 +162,14 @@ interface standardOptions {
 
     /**
      * - Prevent the page from scrolling when the drawer is open.
-     * - **Default Value** true
+     * - **Default Value** false
      */
     preventPageScrolling?: boolean;
 }
 interface modalOptions {
     /**
      * - Prevent the page from scrolling when the drawer is open.
-     * - **Default Value** true
+     * - **Default Value** false
      */
     preventPageScrolling?: boolean;
 }
@@ -211,7 +213,7 @@ interface DrawerProps {
 
     /** 
      * - The drawer handle width, the handle is unvisible element that receive swipe gesture input when the drawer is close.
-     * - **Default Value** 10
+     * - **Default Value** 20
      */
     handleWidth?: number;
 
@@ -229,9 +231,12 @@ interface DrawerProps {
 
     /** 
      * - Drawer open and close animation transition timing function.
-     * - **Default Value** 'ease-out'
+     * 
+     * - Easing functions specify the rate of change of the number over time.
+     * 
+     * - **Default Value** 'easeOutQuart'
      */
-    ease?: 'ease' | 'ease-in' | 'ease-out' | 'ease-in-out' | 'linear' | 'cubic-bezier(0, 0, 0, 0)';
+    ease?: requestFrameEasing | Function;
 
     /** 
      * - Enable open and close drawer with mouse swipe gestures.
@@ -244,6 +249,12 @@ interface DrawerProps {
      * - **Default Value** true
      */
     enableTouchGestures?: boolean;
+
+    /** 
+     * - Enable drawer container scrollbar custom style.
+     * - **Default Value** true
+     */
+    scrollBarCustomStyle?: boolean;
 
     /** 
      * - The background color of drawer shading layer.
@@ -265,6 +276,12 @@ interface DrawerProps {
      * - A callback fired when the drawer closes.
      */
     onClose?: Function;
+
+    /** 
+     * - Drawer wraper z-index css value.
+     * - **Default Value** 100
+     */
+    zIndex?: number;
 }
 
 declare const Drawer: React.FunctionComponent<DrawerProps>
