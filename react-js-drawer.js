@@ -13,33 +13,122 @@ const Drawer = forwardRef((props, ref) => {
   const x = useRef();
 
   const drawer_type = props.type ?? 'modal'; // 'standard'
+  if (drawer_type !== 'modal' && drawer_type !== 'standard') console.error('react-js-drawer: props.type has invalid value.');
+
+  const changePageWidth = props.standardOptions?.changePageWidth ?? false;
+  if (typeof changePageWidth !== 'boolean')
+    console.error('react-js-drawer: props.standardOptions.changePageWidth has invalid value.');
+
+  const preventPageScrolling = props.standardOptions?.preventPageScrolling ?? false;
+  if (typeof preventPageScrolling !== 'boolean')
+    console.error('react-js-drawer: props.standardOptions.preventPageScrolling has invalid value.');
+
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const standard_drawer_options = {
-    changePageWidth: props.standardOptions?.changePageWidth ?? false,
-    preventPageScrolling: props.standardOptions?.preventPageScrolling ?? false,
+    changePageWidth,
+    preventPageScrolling,
   };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const modal_drawer_options = { preventPageScrolling: props.modalOptions?.preventPageScrolling ?? false };
+  if (typeof standard_drawer_options !== 'object') console.error('react-js-drawer: props.standardOptions has invalid value.');
 
-  const direction = props.direction || 'left';
+  const modalPreventPageScrolling = props.modalOptions?.preventPageScrolling ?? false;
+  if (typeof modalPreventPageScrolling !== 'boolean')
+    console.error('react-js-drawer: props.modalOptions.preventPageScrolling has invalid value.');
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  const modal_drawer_options = { preventPageScrolling: modalPreventPageScrolling };
+  if (typeof modal_drawer_options !== 'object') console.error('react-js-drawer: props.modalOptions has invalid value.');
+
+  const direction = props.direction || 'left'; // 'right'
+  if (direction !== 'left' && direction !== 'right') console.error('react-js-drawer: props.direction has invalid value.');
+
   const default_Status = props.defaultStatus || 'closed'; // 'open'
+  if (default_Status !== 'closed' && default_Status !== 'open')
+    console.error('react-js-drawer: props.defaultStatus has invalid value.');
+
   const handle_width = props.handleWidth ?? 20;
-  const handle_background_color = props.handleBackgroundColor || 'initial';
-  const width = (props.width ?? 300) + handle_width;
+  if (typeof handle_width !== 'number' || handle_width < 0)
+    console.error('react-js-drawer: props.handleWidth has invalid value.');
+
+  const handle_background_color = props.handleBackgroundColor ?? 'initial';
+  if (typeof handle_background_color !== 'string')
+    console.error('react-js-drawer: props.handleBackgroundColor has invalid value.');
+
+  const propsWidth = props.width ?? 300;
+  const width = propsWidth + handle_width;
+  if (typeof propsWidth !== 'number' || propsWidth < 0) console.error('react-js-drawer: props.width has invalid value.');
+
   const duration = props.duration ?? 200;
+  if (typeof duration !== 'number' || duration < 0) console.error('react-js-drawer: props.duration has invalid value.');
+
   const easingFunction = props.ease || 'easeOutQuart';
+  if (
+    (!new Set([
+      'linear',
+      'easeInSine',
+      'easeOutSine',
+      'easeInOutSine',
+      'easeInQuad',
+      'easeOutQuad',
+      'easeInOutQuad',
+      'easeInCubic',
+      'easeOutCubic',
+      'easeInOutCubic',
+      'easeInQuart',
+      'easeOutQuart',
+      'easeInOutQuart',
+      'easeInQuint',
+      'easeOutQuint',
+      'easeInOutQuint',
+      'easeInExpo',
+      'easeOutExpo',
+      'easeInOutExpo',
+      'easeInCirc',
+      'easeOutCirc',
+      'easeInOutCirc',
+      'easeInBack',
+      'easeOutBack',
+      'easeInOutBack',
+      'easeInElastic',
+      'easeOutElastic',
+      'easeInOutElastic',
+      'easeInBounce',
+      'easeOutBounce',
+      'easeInOutBounce',
+    ]).has(easingFunction) &&
+      typeof easingFunction === 'string') ||
+    (typeof easingFunction !== 'string' && typeof easingFunction !== 'function')
+  )
+    console.error('react-js-drawer: props.ease has invalid value.');
+
   const enable_mouse_gestures = props.enableMouseGestures ?? false;
+  if (typeof enable_mouse_gestures !== 'boolean') console.error('react-js-drawer: props.enableMouseGestures has invalid value.');
+
   const enable_touch_gestures = props.enableTouchGestures ?? true;
+  if (typeof enable_touch_gestures !== 'boolean') console.error('react-js-drawer: props.enableTouchGestures has invalid value.');
+
   const use_shaded_background = props.useShadedBackground ?? true;
+  if (typeof use_shaded_background !== 'boolean') console.error('react-js-drawer: props.useShadedBackground has invalid value.');
+
   const background_color = props.backgroundColor || 'rgba(0,0,0,0.5)';
+  if (typeof background_color !== 'string') console.error('react-js-drawer: props.backgroundColor has invalid value.');
+
   const enableSrollbarStyle = props.scrollBarCustomStyle ?? true;
+  if (typeof enableSrollbarStyle !== 'boolean') console.error('react-js-drawer: props.scrollBarCustomStyle has invalid value.');
+
   const zIndex = props.zIndex ?? 100;
+  if (typeof zIndex !== 'number') console.error('react-js-drawer: props.zIndex has invalid value.');
+
   const on_open = props.onOpen;
+  if (on_open && typeof on_open !== 'function') console.error('react-js-drawer: props.onOpen has invalid value.');
+
   const on_close = props.onClose;
-  const drawer_style = props.drawerStyle || {
+  if (on_close && typeof on_close !== 'function') console.error('react-js-drawer: props.onClose has invalid value.');
+
+  const drawer_style = props.drawerStyle ?? {
     backgroundImage: 'linear-gradient(180deg, #e0ecfc 7%, #bcbcdd 100%)',
     boxShadow: '0 2px 30px 0 rgb(31 38 103 / 20%)',
   };
+  if (typeof drawer_style !== 'object') console.error('react-js-drawer: props.drawerStyle has invalid value.');
 
   // drawer style when it's on the left side.
   const wrapper_style_left = {
@@ -62,6 +151,7 @@ const Drawer = forwardRef((props, ref) => {
 
   const [isOpen, setIsOpen] = useState(default_Status !== 'closed');
 
+  // save sibling (the rest of the page elements) to a siblings ref, used for 'standard' drawer type.
   const get_sibling = () => {
     let el = document.getElementById('Drawer_Wrapper');
     const sibs = [];
@@ -72,22 +162,23 @@ const Drawer = forwardRef((props, ref) => {
     siblings.current = sibs;
   };
 
+  // change page elements position and width for drawer type 'standard'.
   const set_siblings_style = useCallback(
-    v => {
-      // exit when the drawer type is not standard.
+    value => {
+      // exit when the drawer type is not equals to 'standard'.
       if (drawer_type === 'modal') return;
-      // adjust translate value when the drawer is on the right.
+      // adjust transform translate value depending on drawer direction left or right.
       const translateValue =
         direction === 'right' && standard_drawer_options.changePageWidth
           ? 0
           : direction === 'right' && !standard_drawer_options.changePageWidth
-          ? -v
-          : v;
-
+          ? -value
+          : value;
+      // loop over the page elements and change the style.
       for (let i = 0; i < siblings.current.length; i++) {
         const el = siblings.current[i];
         el.style.transform = `translateX(${translateValue}px)`;
-        if (standard_drawer_options.changePageWidth) el.style.width = `calc(100% - ${v}px)`;
+        if (standard_drawer_options.changePageWidth) el.style.width = `calc(100% - ${value}px)`;
       }
     },
     [drawer_type, standard_drawer_options.changePageWidth, direction]
@@ -112,7 +203,7 @@ const Drawer = forwardRef((props, ref) => {
     } else if (default_Status === 'closed') {
       for (let i = 0; i < siblings.current.length; i++) {
         const el = siblings.current[i];
-        // el.style.removeProperty('transform');
+        el.style.removeProperty('transform');
       }
     }
 
