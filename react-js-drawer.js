@@ -1,14 +1,18 @@
 import './react-js-drawer.css';
-import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useState } from 'react';
+import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import { requestNum } from 'request-animation-number';
-
-let x, y, t, isSwipe, siblings;
 
 document.body.style.overscrollBehaviorX = 'none';
 document.body.style.margin = '0px';
 
 const Drawer = forwardRef((props, ref) => {
-  const drawer_type = props.type || 'modal'; // 'standard'
+  const siblings = useRef();
+  const isSwipe = useRef();
+  const t = useRef();
+  const y = useRef();
+  const x = useRef();
+
+  const drawer_type = props.type ?? 'modal'; // 'standard'
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const standard_drawer_options = {
     changePageWidth: props.standardOptions?.changePageWidth ?? false,
@@ -18,13 +22,13 @@ const Drawer = forwardRef((props, ref) => {
   const modal_drawer_options = { preventPageScrolling: props.modalOptions?.preventPageScrolling ?? false };
 
   const direction = props.direction || 'left';
-  const default_Status = props.defaultStatus || 'closed';
+  const default_Status = props.defaultStatus || 'closed'; // 'open'
   const handle_width = props.handleWidth ?? 20;
   const handle_background_color = props.handleBackgroundColor || 'initial';
   const width = (props.width ?? 300) + handle_width;
   const duration = props.duration ?? 200;
   const easingFunction = props.ease || 'easeOutQuart';
-  const enable_mouse_gestures = props.enableMouseGestures ?? true;
+  const enable_mouse_gestures = props.enableMouseGestures ?? false;
   const enable_touch_gestures = props.enableTouchGestures ?? true;
   const use_shaded_background = props.useShadedBackground ?? true;
   const background_color = props.backgroundColor || 'rgba(0,0,0,0.5)';
@@ -42,11 +46,13 @@ const Drawer = forwardRef((props, ref) => {
     left: default_Status === 'closed' ? -(width - handle_width) + 'px' : '0px',
     width: width + 'px',
     flexDirection: 'row-reverse',
+    direction: 'ltr',
   };
   // drawer style when it's on the right side.
   const wrapper_style_right = {
     right: default_Status === 'closed' ? -(width - handle_width) + 'px' : '0px',
     width: width + 'px',
+    direction: 'ltr',
   };
 
   // input duration and distance settings that determine fast swipe.
@@ -63,7 +69,7 @@ const Drawer = forwardRef((props, ref) => {
       el = el.nextSibling;
       if (el.id !== 'Drawer-Background') sibs.push(el);
     }
-    siblings = sibs;
+    siblings.current = sibs;
   };
 
   const set_siblings_style = useCallback(
@@ -78,8 +84,8 @@ const Drawer = forwardRef((props, ref) => {
           ? -v
           : v;
 
-      for (let i = 0; i < siblings.length; i++) {
-        const el = siblings[i];
+      for (let i = 0; i < siblings.current.length; i++) {
+        const el = siblings.current[i];
         el.style.transform = `translateX(${translateValue}px)`;
         if (standard_drawer_options.changePageWidth) el.style.width = `calc(100% - ${v}px)`;
       }
@@ -100,7 +106,15 @@ const Drawer = forwardRef((props, ref) => {
 
   useLayoutEffect(() => {
     get_sibling();
-    if (default_Status === 'open') set_siblings_style(width - handle_width);
+
+    if (default_Status === 'open') {
+      set_siblings_style(width - handle_width);
+    } else if (default_Status === 'closed') {
+      for (let i = 0; i < siblings.current.length; i++) {
+        const el = siblings.current[i];
+        // el.style.removeProperty('transform');
+      }
+    }
 
     // restore body and drawer's parent style on unmount.
     return () => {
@@ -128,8 +142,8 @@ const Drawer = forwardRef((props, ref) => {
       // exit when the drawer type isn't standard.
       if (drawer_type === 'modal') return;
       // loop over drawer's siblings.
-      for (let i = 0; i < siblings.length; i++) {
-        const el = siblings[i];
+      for (let i = 0; i < siblings.current.length; i++) {
+        const el = siblings.current[i];
 
         const translateToValue =
           direction === 'right' && standard_drawer_options.changePageWidth
@@ -178,13 +192,18 @@ const Drawer = forwardRef((props, ref) => {
           on_close?.();
           // set drawer to close state.
           setIsOpen(false);
+          // clean up if drawer type changed from standard to modal while is still open.
+          for (let i = 0; i < siblings.current.length; i++) {
+            const el = siblings.current[i];
+            el.style.removeProperty('transform');
+          }
         }
       });
       // exit when the drawer type isn't standard.
       if (drawer_type === 'modal') return;
       //
-      for (let i = 0; i < siblings.length; i++) {
-        const el = siblings[i];
+      for (let i = 0; i < siblings.current.length; i++) {
+        const el = siblings.current[i];
         const translateFromValue =
           direction === 'right' && standard_drawer_options.changePageWidth
             ? 0
@@ -201,6 +220,7 @@ const Drawer = forwardRef((props, ref) => {
           (t, w) => {
             el.style.transform = `translateX(${t}px)`;
             if (standard_drawer_options.changePageWidth) el.style.width = `calc(100% - ${w}px)`;
+            if (t === 0) el.style.removeProperty('transform');
           }
         );
       }
@@ -223,10 +243,10 @@ const Drawer = forwardRef((props, ref) => {
       // the value that change drawer position (track).
       let move_width =
         direction === 'left'
-          ? -(width - handle_width) + e.clientX + (isOpen ? width - handle_width / 2 - x : 0)
+          ? -(width - handle_width) + e.clientX + (isOpen ? width - handle_width / 2 - x.current : 0)
           : -(width - handle_width) +
             (window.innerWidth - e.clientX) +
-            (isOpen ? width - handle_width / 2 - (window.innerWidth - x) : -scroll_width);
+            (isOpen ? width - handle_width / 2 - (window.innerWidth - x.current) : -scroll_width);
 
       move_width = Math.min(Math.max(move_width, -(width - handle_width)), 0);
 
@@ -249,9 +269,9 @@ const Drawer = forwardRef((props, ref) => {
 
   const drawer_handle_onMouseDown = e => {
     // register first click position to calculate swipe distance later (on mouse up event).
-    x = e.clientX;
+    x.current = e.clientX;
     // register first click time to calculate swipe duration later (on mouse up event).
-    t = Date.now();
+    t.current = Date.now();
     // add on mouse move event listener to the body.
     document.body.addEventListener('mousemove', drawer_handle_onMove);
   };
@@ -261,9 +281,9 @@ const Drawer = forwardRef((props, ref) => {
       const drawer = document.getElementById('Drawer_Wrapper');
       const background = document.getElementById('Drawer-Background');
 
-      const moving_distance = e.clientX - x;
+      const moving_distance = e.clientX - x.current;
       const moving_direction = moving_distance < 0 ? 'left' : 'right';
-      const moving_time = Date.now() - t;
+      const moving_time = Date.now() - t.current;
       const drawer_current_pos = parseInt(window.getComputedStyle(drawer)[direction]);
       const move_percentage = ((drawer_current_pos + width) * 100) / width;
       // hide the shaded background if swipe failed to open the drawer.
@@ -306,11 +326,11 @@ const Drawer = forwardRef((props, ref) => {
   // Touch inputs
   const drawer_handle_onTouchStart = e => {
     // register first touch position on the x-axis to calculate swipe distance later (on touch end event).
-    x = e.targetTouches[0].pageX;
+    x.current = e.targetTouches[0].pageX;
     // register first touch position on the y-axis to calculate swipe distance to enable or disable scrolling later (on touch end event).
-    y = e.targetTouches[0].pageY;
+    y.current = e.targetTouches[0].pageY;
     // register first touch time to calculate swipe duration later (on touch end event).
-    t = Date.now();
+    t.current = Date.now();
     // add on touch move event listener to the drawer element.
     const drawer = document.getElementById('Drawer_Wrapper');
     drawer.addEventListener('touchmove', drawer_handle_onTouchMove);
@@ -323,11 +343,11 @@ const Drawer = forwardRef((props, ref) => {
       const background = document.getElementById('Drawer-Background');
       if (background) background.style.display = 'block';
 
-      const horizontal_distance = Math.abs(e.changedTouches[0].pageX - x);
-      const verical_destance = Math.abs(e.changedTouches[0].pageY - y);
-      isSwipe = isSwipe === true ? true : horizontal_distance > 10;
+      const horizontal_distance = Math.abs(e.changedTouches[0].pageX - x.current);
+      const verical_destance = Math.abs(e.changedTouches[0].pageY - y.current);
+      isSwipe.current = isSwipe.current === true ? true : horizontal_distance > 10;
       // cancel touch move event if user is scrolling inside the drawer.
-      if (verical_destance > 10 && !isSwipe && isOpen) {
+      if (verical_destance > 10 && !isSwipe.current && isOpen) {
         drawer.style[direction] = '0px';
         drawer.removeEventListener('touchmove', drawer_handle_onTouchMove);
         return;
@@ -336,10 +356,10 @@ const Drawer = forwardRef((props, ref) => {
       // the value that change drawer position (track)
       let move_width =
         direction === 'left'
-          ? -(width - handle_width) + e.targetTouches[0].pageX + (isOpen ? width - handle_width / 2 - x : -handle_width)
+          ? -(width - handle_width) + e.targetTouches[0].pageX + (isOpen ? width - handle_width / 2 - x.current : -handle_width)
           : -(width + handle_width) +
             (window.innerWidth - e.targetTouches[0].pageX) +
-            (isOpen ? width + handle_width - (window.innerWidth - x) : handle_width);
+            (isOpen ? width + handle_width - (window.innerWidth - x.current) : handle_width);
 
       move_width = Math.min(Math.max(move_width, -(width - handle_width)), 0);
 
@@ -355,12 +375,12 @@ const Drawer = forwardRef((props, ref) => {
 
   const drawer_handle_onTouchEnd = useCallback(
     e => {
-      isSwipe = null;
+      isSwipe.current = null;
       const drawer = document.getElementById('Drawer_Wrapper');
 
-      const moving_distance = e.changedTouches[0].pageX - x;
+      const moving_distance = e.changedTouches[0].pageX - x.current;
       const moving_direction = moving_distance < 0 ? 'left' : 'right';
-      const moving_time = Date.now() - t;
+      const moving_time = Date.now() - t.current;
       const drawer_current_pos = parseInt(window.getComputedStyle(drawer)[direction]);
       const move_percentage = ((drawer_current_pos + width) * 100) / width;
 
@@ -399,11 +419,11 @@ const Drawer = forwardRef((props, ref) => {
   // Shaded background touch inputs (only when the drawer is open)
   const shaded_onTouchStart = e => {
     // register first touch position on the x-axis to calculate swipe distance later (on touch end event).
-    x = e.targetTouches[0].pageX;
+    x.current = e.targetTouches[0].pageX;
     // register first touch position on the y-axis to calculate swipe distance to enable or disable scrolling later (on touch end event).
-    y = e.targetTouches[0].pageY;
+    y.current = e.targetTouches[0].pageY;
     // register first touch time to calculate swipe duration later (on touch end event).
-    t = Date.now();
+    t.current = Date.now();
     // add on touch move event listener to shaded background element.
     const shaded = document.getElementById('Drawer-Background');
     shaded.addEventListener('touchmove', shaded_onTouchMove);
@@ -436,9 +456,9 @@ const Drawer = forwardRef((props, ref) => {
       const shaded = document.getElementById('Drawer-Background');
       const drawer = document.getElementById('Drawer_Wrapper');
 
-      const moving_distance = e.changedTouches[0].pageX - x;
+      const moving_distance = e.changedTouches[0].pageX - x.current;
       const moving_direction = moving_distance < 0 ? 'left' : 'right';
-      const moving_time = Date.now() - t;
+      const moving_time = Date.now() - t.current;
       const drawer_current_pos = parseInt(window.getComputedStyle(drawer)[direction]);
       const move_percentage = ((drawer_current_pos + width) * 100) / width;
       // open the drawer if more than half of it is opend or on fast swipe.
@@ -471,7 +491,6 @@ const Drawer = forwardRef((props, ref) => {
     [direction, width, shaded_onTouchMove, open_animation, close_animation, isOpen]
   );
 
-  // Methods that used with ref
   const wait = time => new Promise(e => setTimeout(e, time));
 
   const close = e => {
