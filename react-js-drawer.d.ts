@@ -156,20 +156,20 @@ type requestFrameEasing = "linear" | "easeInSine" | "easeOutSine" | "easeInOutSi
 interface standardOptions {
     /**
      * - chrink the page width to fit the drawer when it's open (co-planar with page content).
-     * - **Default Value** false
+     * - **Default Value** `false`
      */
     changePageWidth?: boolean;
 
     /**
      * - Prevent the page from scrolling when the drawer is open.
-     * - **Default Value** false
+     * - **Default Value** `false`
      */
     preventPageScrolling?: boolean;
 }
 interface modalOptions {
     /**
      * - Prevent the page from scrolling when the drawer is open.
-     * - **Default Value** false
+     * - **Default Value** `false`
      */
     preventPageScrolling?: boolean;
 }
@@ -178,20 +178,20 @@ interface DrawerProps {
 
     /**
      * - Position the drawer on the left or on the right side of the Html page.
-     * - **Default Value** 'left'
+     * - **Default Value** `left`
      */
     direction?: 'left' | 'right';
 
     /**
      * - The initial status of the drawer.
-     * - **Default Value** 'closed'
+     * - **Default Value** `closed`
      */
     defaultStatus?: 'closed' | 'open';
 
     /**
      * - modal : show the drawer over the page (deosn't effect the page layout).
      * - standard : show the drawer beside the page (effects the page layout).
-     * - **Default Value** 'modal'
+     * - **Default Value** `modal`
      */
     type?: 'modal' | 'standard';
 
@@ -207,25 +207,25 @@ interface DrawerProps {
 
     /**
      * - The drawer width when it's open.
-     * - **Default Value** 300
+     * - **Default Value** `300`
      */
     width?: number;
 
     /** 
      * - The drawer handle width, the handle is unvisible element that receive swipe gesture input when the drawer is close.
-     * - **Default Value** 20
+     * - **Default Value** `20`
      */
     handleWidth?: number;
 
     /** 
      * - The drawer handle background color, use only for debuging.
-     * - **Default Value** 'initial'
+     * - **Default Value** `initial`
      */
     handleBackgroundColor?: NamedColor;
 
     /** 
      * - The drawer open and close animation duration.
-     * - **Default Value** 200
+     * - **Default Value** `200`
      */
     duration?: number;
 
@@ -234,31 +234,31 @@ interface DrawerProps {
      * 
      * - Easing functions specify the rate of change of the number over time.
      * 
-     * - **Default Value** 'easeOutQuart'
+     * - **Default Value** `easeOutQuart`
      */
     ease?: requestFrameEasing | Function;
 
     /** 
      * - Enable open and close drawer with mouse swipe gestures.
-     * - **Default Value** true     
+     * - **Default Value** `false`     
      */
     enableMouseGestures?: boolean;
 
     /** 
      * - Enable open and close drawer with touch swipe gestures.
-     * - **Default Value** true
+     * - **Default Value** `true`
      */
     enableTouchGestures?: boolean;
 
     /** 
      * - Enable drawer container scrollbar custom style.
-     * - **Default Value** true
+     * - **Default Value** `true`
      */
     scrollBarCustomStyle?: boolean;
 
     /** 
      * - The background color of drawer shading layer.
-     * - **Default Value** 'rgba(0,0,0,0.5)'
+     * - **Default Value** 'rgba(0,0,0,0.5)`
      */
     backgroundColor?: NamedColor;
 
@@ -279,7 +279,7 @@ interface DrawerProps {
 
     /** 
      * - Drawer wraper z-index css value.
-     * - **Default Value** 100
+     * - **Default Value** `100`
      */
     zIndex?: number;
 }
