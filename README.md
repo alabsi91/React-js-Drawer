@@ -30,9 +30,9 @@
 ## How to use
 
 - Make sure to put the drawer on the top of your main page.
-- The drawer should have one sibling element for stability.
+- The drawer should have one sibling element for stability reasons.
 
-```javascript
+```jsx
 import Drawer from 'react-js-drawer';
 
 export default function Index() {
@@ -57,11 +57,11 @@ export default function Index() {
 
 ## Props
 
-### type : _['modal' | 'standard'] [optional]_
+### type : _[ 'modal' | 'standard' ] [optional]_
 
 - modal : show the drawer on top of the page (deosn't effect the page layout).
 - standard : show the drawer beside the page (effects the page layout).
-- **Default Value** 'modal'
+- **Default Value** `modal`
 
 ### standardOptions : _[Object] [optional]_
 
@@ -75,41 +75,42 @@ export default function Index() {
 - Options for drawer type `modal` .
 - `preventPageScrolling?: boolean` Prevent the page from scrolling when the drawer is open. (default : false)
 
-### direction : _['left' | 'right'] [optional]_
+### direction : _[ 'left' | 'right' ] [optional]_
 
 - Position the drawer on the left or on the right side of the Html page.
-- **Default Value** 'left'
+- **Default Value** `left`
 
-### defaultStatus : _['closed' | 'open'] [optional]_
+### defaultStatus : _[ 'closed' | 'open' ] [optional]_
 
 - The initial status of the drawer.
-- **Default Value** 'closed'
+- **Default Value** `closed`
 
 ### width : _[Number] [optional]_
 
 - The drawer width when it's open.
-- **Default Value** 300
+- **Default Value** `300`
 
 ### handleWidth : _[Number] [optional]_
 
 - The drawer handle width, the handle is unvisible element that receive swipe gesture input when the drawer is close.
-- **Default Value** 20
+- **Default Value** `20`
 - ![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawerclosed.png)
 
 ### handleBackgroundColor : _[String] [optional]_
 
 - The drawer handle background color, use only for debuging.
-- **Default Value** 'initial'
+- **Default Value** `initial`
 
 ### duration : _[Number] [optional]_
 
 - The drawer open and close animation duration.
-- **Default Value** 200
+- **Default Value** `200`
 
 ### ease : _[String | Function] [optional]_
 
 - Drawer open and close animation transition timing function.
 - Easing functions specify the rate of change of the number over time.
+- **Default Value** `easeOutQuart`
 - Avaliable Easing functions :
   `"linear", "easeInSine", "easeOutSine", "easeInOutSine", "easeInQuad", "easeOutQuad", "easeInOutQuad", "easeInCubic", "easeOutCubic", "easeInOutCubic", "easeInQuart", "easeOutQuart", "easeInOutQuart", "easeInQuint", "easeOutQuint", "easeInOutQuint", "easeInExpo", "easeOutExpo", "easeInOutExpo", "easeInCirc", "easeOutCirc", "easeInOutCirc", "easeInBack", "easeOutBack", "easeInOutBack", "easeInElastic", "easeOutElastic", "easeInOutElastic", "easeInBounce", "easeOutBounce", "easeInOutBounce"`
 - If you want to provide your own timing-function make sure that the function takes one parameter and returns one value.
@@ -120,27 +121,25 @@ function easeInQuad(x) {
 }
 ```
 
-- **Default Value** 'ease-out'
-
 ### enableMouseGestures : _[Boolean] [optional]_
 
 - Enable open and close drawer with mouse swipe gestures.
-- **Default Value** true
+- **Default Value** `true`
 
 ### enableTouchGestures : _[Boolean] [optional]_
 
 - Enable open and close drawer with touch swipe gestures.
-- **Default Value** true
+- **Default Value** `true`
 
 ### scrollBarCustomStyle : _[Boolean] [optional]_
 
 - Enable drawer container scrollbar custom style.
-- **Default Value** true
+- **Default Value** `true`
 
 ### backgroundColor : _[Srting] [optional]_
 
 - The background color of drawer shading layer.
-- **Default Value** 'rgba(0,0,0,0.5)'
+- **Default Value** `rgba(0,0,0,0.5)`
 
 ### drawerStyle : _[Object] [optional]_
 
@@ -153,10 +152,12 @@ function easeInQuad(x) {
 ### onClose : _[Callback] [optional]_
 
 - A callback fired when the drawer closes.
+
 ### zIndex : _[Number] [optional]_
 
 - Drawer wraper z-index css value.
-- **Default Value** 100
+- **Default Value** `100`
+
 ## Methods
 
 - `open()`
