@@ -11,8 +11,6 @@ require("core-js/modules/es.parse-int.js");
 
 require("core-js/modules/es.promise.js");
 
-require("./react-js-drawer.css");
-
 var _react = _interopRequireWildcard(require("react"));
 
 var _requestAnimationNumber = require("request-animation-number");
@@ -30,13 +28,22 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 document.body.style.overscrollBehaviorX = 'none';
 document.body.style.margin = '0px';
 const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
-  var _props$type, _props$standardOption, _props$standardOption2, _props$standardOption3, _props$standardOption4, _props$modalOptions$p, _props$modalOptions, _props$handleWidth, _props$handleBackgrou, _props$width, _props$duration, _props$enableMouseGes, _props$enableTouchGes, _props$useShadedBackg, _props$scrollBarCusto, _props$zIndex, _props$drawerStyle;
+  var _props$type, _props$standardOption, _props$standardOption2, _props$standardOption3, _props$standardOption4, _props$modalOptions$p, _props$modalOptions, _props$handleWidth, _props$handleBackgrou, _props$width, _props$duration, _props$enableMouseGes, _props$enableTouchGes, _props$useShadedBackg, _props$zIndex, _props$drawerStyle;
 
-  const siblings = (0, _react.useRef)();
-  const isSwipe = (0, _react.useRef)();
-  const t = (0, _react.useRef)();
-  const y = (0, _react.useRef)();
-  const x = (0, _react.useRef)(); // props
+  const drawerRef = (0, _react.useRef)(null); // drawer wrapper element
+
+  const backgroundRef = (0, _react.useRef)(null); // shaded background element
+
+  const siblings = (0, _react.useRef)(null); // siblings (the rest of the page) elements
+
+  const isSwipe = (0, _react.useRef)(null); // is swipe gesture
+
+  const t = (0, _react.useRef)(null); // touch duration
+
+  const y = (0, _react.useRef)(null); // touch y position
+
+  const x = (0, _react.useRef)(null); // touch x position
+  // props
 
   const drawer_type = (_props$type = props.type) !== null && _props$type !== void 0 ? _props$type : 'modal'; // 'standard'
 
@@ -66,27 +73,28 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
   const enable_touch_gestures = (_props$enableTouchGes = props.enableTouchGestures) !== null && _props$enableTouchGes !== void 0 ? _props$enableTouchGes : true;
   const use_shaded_background = (_props$useShadedBackg = props.useShadedBackground) !== null && _props$useShadedBackg !== void 0 ? _props$useShadedBackg : true;
   const background_color = props.backgroundColor || 'rgba(0,0,0,0.5)';
-  const enableSrollbarStyle = (_props$scrollBarCusto = props.scrollBarCustomStyle) !== null && _props$scrollBarCusto !== void 0 ? _props$scrollBarCusto : true;
   const zIndex = (_props$zIndex = props.zIndex) !== null && _props$zIndex !== void 0 ? _props$zIndex : 100;
   const on_open = props.onOpen;
   const on_close = props.onClose;
+  const on_move = props.onMove;
   const drawer_style = (_props$drawerStyle = props.drawerStyle) !== null && _props$drawerStyle !== void 0 ? _props$drawerStyle : {
     backgroundImage: 'linear-gradient(180deg, #e0ecfc 7%, #bcbcdd 100%)',
     boxShadow: '0 2px 30px 0 rgb(31 38 103 / 20%)'
-  }; // drawer style when it's on the left side.
+  }; // check drawer direction css property.
+
+  const [isRtl, setIsRtl] = (0, _react.useState)(null); // drawer wrapper element style when it's on the left side.
 
   const wrapper_style_left = {
     left: default_Status === 'closed' ? -(width - handle_width) + 'px' : '0px',
     width: width + 'px',
-    flexDirection: 'row-reverse',
-    direction: 'ltr'
-  }; // drawer style when it's on the right side.
+    flexDirection: isRtl ? 'row' : 'row-reverse'
+  }; // drawer wrapper element style when it's on the right side.
 
   const wrapper_style_right = {
     right: default_Status === 'closed' ? -(width - handle_width) + 'px' : '0px',
     width: width + 'px',
-    direction: 'ltr'
-  };
+    flexDirection: isRtl ? 'row-reverse' : 'row'
+  }; // validate props
 
   const checkTypes = () => {
     if (drawer_type !== 'modal' && drawer_type !== 'standard') console.error('react-js-drawer: props.type has invalid value.');
@@ -106,73 +114,89 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
     if (typeof enable_touch_gestures !== 'boolean') console.error('react-js-drawer: props.enableTouchGestures has invalid value.');
     if (typeof use_shaded_background !== 'boolean') console.error('react-js-drawer: props.useShadedBackground has invalid value.');
     if (typeof background_color !== 'string') console.error('react-js-drawer: props.backgroundColor has invalid value.');
-    if (typeof enableSrollbarStyle !== 'boolean') console.error('react-js-drawer: props.scrollBarCustomStyle has invalid value.');
     if (typeof zIndex !== 'number') console.error('react-js-drawer: props.zIndex has invalid value.');
     if (on_open && typeof on_open !== 'function') console.error('react-js-drawer: props.onOpen has invalid value.');
     if (on_close && typeof on_close !== 'function') console.error('react-js-drawer: props.onClose has invalid value.');
+    if (on_move && typeof on_move !== 'function') console.error('react-js-drawer: props.onMove has invalid value.');
     if (typeof drawer_style !== 'object') console.error('react-js-drawer: props.drawerStyle has invalid value.');
+    if (props.id && typeof props.id !== 'string') console.error('react-js-drawer: props.id has invalid value.');
+    if (props.className && typeof props.className !== 'string') console.error('react-js-drawer: props.className has invalid value.');
+    const allProps = new Set(['type', 'standardOptions', 'modalOptions', 'direction', 'wheelScrollWithAnimation', 'defaultStatus', 'handleWidth', 'handleBackgroundColor', 'width', 'duration', 'ease', 'enableMouseGestures', 'enableTouchGestures', 'useShadedBackground', 'backgroundColor', 'adjustPagesSize', 'zIndex', 'onOpen', 'onClose', 'onMove', 'drawerStyle', 'id', 'className', 'children']);
+
+    for (const key in props) {
+      if (Object.hasOwnProperty.call(props, key)) {
+        if (!allProps.has(key)) console.error("react-js-drawer: can't recognize props.".concat(key, " it's not a valid prop."));
+      }
+    }
   };
 
-  checkTypes(); // input duration and distance settings that determine fast swipe.
+  if (!process.env.NODE_ENV || process.env.NODE_ENV === 'development') checkTypes(); // input duration and distance settings that determine fast swipe.
 
   const time_min = 75;
   const time_max = 300;
-  const input_distance = 30;
-  const [isOpen, setIsOpen] = (0, _react.useState)(default_Status !== 'closed'); // save sibling (the rest of the page elements) to a siblings ref, used for 'standard' drawer type.
+  const input_distance = 30; // drawer status
+
+  const [isOpen, setIsOpen] = (0, _react.useState)(default_Status !== 'closed'); // save sibling (the rest of the page elements) to a siblings ref, used for 'standard' drawer type only.
 
   const get_sibling = () => {
-    let el = document.getElementById('Drawer_Wrapper');
+    let el = drawerRef.current;
     const sibs = [];
 
     while (el.nextSibling) {
       el = el.nextSibling;
-      if (el.id !== 'Drawer-Background') sibs.push(el);
+      if (el !== backgroundRef.current) sibs.push(el);
     }
 
     siblings.current = sibs;
   }; // change page elements position and width for drawer type 'standard'.
 
 
-  const set_siblings_style = (0, _react.useCallback)(value => {
-    // exit when the drawer type is not equals to 'standard'.
+  const mutatePage = (0, _react.useCallback)(() => {
+    const drawer = drawerRef.current;
+    const width = drawer.getBoundingClientRect().width - handle_width;
+    const pos = parseInt(window.getComputedStyle(drawer).getPropertyValue(direction)) + width; // props onMove callback
+
+    on_move === null || on_move === void 0 ? void 0 : on_move(pos / width); // exit when the drawer type is not type'standard'.
+
     if (drawer_type === 'modal') return; // adjust transform translate value depending on drawer direction left or right.
 
-    const translateValue = direction === 'right' && standard_drawer_options.changePageWidth ? 0 : direction === 'right' && !standard_drawer_options.changePageWidth ? -value : value; // loop over the page elements and change the style.
+    const translateValue = isRtl ? direction === 'right' && standard_drawer_options.changePageWidth ? -pos : direction === 'right' && !standard_drawer_options.changePageWidth ? -pos : direction === 'left' && standard_drawer_options.changePageWidth ? 0 : pos : direction === 'right' && standard_drawer_options.changePageWidth ? 0 : direction === 'right' && !standard_drawer_options.changePageWidth ? -pos : pos; // loop over the page elements and change the style.
 
     for (let i = 0; i < siblings.current.length; i++) {
       const el = siblings.current[i];
       el.style.transform = "translateX(".concat(translateValue, "px)");
-      if (standard_drawer_options.changePageWidth) el.style.width = "calc(100% - ".concat(value, "px)");
+      if (standard_drawer_options.changePageWidth) el.style.width = "calc(100% - ".concat(pos, "px)");
     }
-  }, [drawer_type, standard_drawer_options.changePageWidth, direction]);
+  }, [direction, drawer_type, handle_width, isRtl, on_move, standard_drawer_options.changePageWidth]);
   (0, _react.useEffect)(() => {
-    // remove scrolling from body and drawer's parent if enabled.
+    // observe the drawerRef and mutate the page elements for drawer type 'standard'.
+    const observer = new MutationObserver(mutatePage);
+    observer.observe(drawerRef.current, {
+      attributes: true
+    }); // remove scrolling from body and drawer's parent if enabled.
+
     if (standard_drawer_options.preventPageScrolling && drawer_type === 'standard' || modal_drawer_options.preventPageScrolling && drawer_type === 'modal') {
       document.body.style.overflow = isOpen ? 'hidden' : 'auto';
-      document.getElementById('Drawer_Wrapper').parentElement.style.overflow = isOpen ? 'hidden' : 'auto';
+      drawerRef.current.parentElement.style.overflow = isOpen ? 'hidden' : 'auto';
     }
-  }, [isOpen, standard_drawer_options, drawer_type, modal_drawer_options]);
-  (0, _react.useLayoutEffect)(() => {
-    get_sibling();
-
-    if (default_Status === 'open') {
-      set_siblings_style(width - handle_width);
-    } else if (default_Status === 'closed') {
-      for (let i = 0; i < siblings.current.length; i++) {
-        const el = siblings.current[i];
-        el.style.removeProperty('transform');
-      }
-    } // restore body and drawer's parent style on unmount.
-
 
     return () => {
-      document.body.style.overflow = 'auto';
-      document.getElementById('Drawer_Wrapper').parentElement.style.overflow = 'auto';
+      observer.disconnect();
     };
-  }, [default_Status, handle_width, set_siblings_style, width]);
+  }, [isOpen, standard_drawer_options, drawer_type, modal_drawer_options, mutatePage]);
+  (0, _react.useLayoutEffect)(() => {
+    setIsRtl(window.getComputedStyle(drawerRef.current).direction === 'rtl');
+    get_sibling(); // restore body and drawer's parent style on unmount.
+
+    const drawer = drawerRef.current;
+    return () => {
+      document.body.style.overflow = 'auto';
+      drawer.parentElement.style.overflow = 'auto';
+    };
+  }, [handle_width, mutatePage, width, default_Status]);
   const open_animation = (0, _react.useCallback)(from => {
-    const drawer = document.getElementById('Drawer_Wrapper');
-    const background = document.getElementById('Drawer-Background'); // animate to open state.
+    const drawer = drawerRef.current;
+    const background = backgroundRef.current; // animate to open state.
 
     (0, _requestAnimationNumber.requestNum)({
       from,
@@ -189,29 +213,11 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
 
         setIsOpen(true);
       }
-    }); // exit when the drawer type isn't standard.
-
-    if (drawer_type === 'modal') return; // loop over drawer's siblings.
-
-    for (let i = 0; i < siblings.current.length; i++) {
-      const el = siblings.current[i];
-      const translateToValue = direction === 'right' && standard_drawer_options.changePageWidth ? 0 : direction === 'right' && !standard_drawer_options.changePageWidth ? -width + handle_width : width - handle_width;
-      const translateFromValue = direction === 'right' && standard_drawer_options.changePageWidth ? 0 : direction === 'right' && !standard_drawer_options.changePageWidth ? -(width - handle_width + from[0]) : width - handle_width + from[0]; // animate drawer's siblilng width and translate vaules to open state.
-
-      (0, _requestAnimationNumber.requestNum)({
-        from: [translateFromValue, width - handle_width + from[0]],
-        to: [translateToValue, width - handle_width],
-        duration,
-        easingFunction
-      }, (t, w) => {
-        el.style.transform = "translateX(".concat(t, "px)");
-        if (standard_drawer_options.changePageWidth) el.style.width = "calc(100% - ".concat(w, "px)");
-      });
-    }
-  }, [direction, drawer_type, duration, easingFunction, handle_width, on_open, standard_drawer_options.changePageWidth, width]);
+    });
+  }, [direction, duration, easingFunction, on_open]);
   const close_animation = (0, _react.useCallback)(from => {
-    const drawer = document.getElementById('Drawer_Wrapper');
-    const background = document.getElementById('Drawer-Background'); // animate drawer to close state.
+    const drawer = drawerRef.current;
+    const background = backgroundRef.current; // animate drawer to close state.
 
     (0, _requestAnimationNumber.requestNum)({
       from,
@@ -235,29 +241,12 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
           el.style.removeProperty('transform');
         }
       }
-    }); // exit when the drawer type isn't standard.
-
-    if (drawer_type === 'modal') return; //
-
-    for (let i = 0; i < siblings.current.length; i++) {
-      const el = siblings.current[i];
-      const translateFromValue = direction === 'right' && standard_drawer_options.changePageWidth ? 0 : direction === 'right' && !standard_drawer_options.changePageWidth ? -(width - handle_width + from[0]) : width - handle_width + from[0];
-      (0, _requestAnimationNumber.requestNum)({
-        from: [translateFromValue, width - handle_width + from[0]],
-        to: [0, 0],
-        duration,
-        easingFunction
-      }, (t, w) => {
-        el.style.transform = "translateX(".concat(t, "px)");
-        if (standard_drawer_options.changePageWidth) el.style.width = "calc(100% - ".concat(w, "px)");
-        if (t === 0) el.style.removeProperty('transform');
-      });
-    }
-  }, [direction, drawer_type, duration, easingFunction, handle_width, on_close, standard_drawer_options.changePageWidth, width]); // Mouse inputs
+    });
+  }, [direction, duration, easingFunction, handle_width, on_close, width]); // Mouse inputs
 
   const drawer_handle_onMove = (0, _react.useCallback)(e => {
-    const drawer = document.getElementById('Drawer_Wrapper');
-    const background = document.getElementById('Drawer-Background');
+    const drawer = drawerRef.current;
+    const background = backgroundRef.current;
     if (background) background.style.display = 'block'; // used to cancel mouse onMove event if mouse pointer exceeded the drawer element while swiping.
 
     const drawer_current_pos = drawer.getBoundingClientRect()[direction === 'left' ? 'right' : 'left']; // calculate scroll bar width.
@@ -267,7 +256,6 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
     let move_width = direction === 'left' ? -(width - handle_width) + e.clientX + (isOpen ? width - handle_width / 2 - x.current : 0) : -(width - handle_width) + (window.innerWidth - e.clientX) + (isOpen ? width - handle_width / 2 - (window.innerWidth - x.current) : -scroll_width);
     move_width = Math.min(Math.max(move_width, -(width - handle_width)), 0);
     drawer.style[direction] = move_width + 'px';
-    set_siblings_style(move_width + width - handle_width);
     const move_percentage = (move_width + width) * 100 / width;
     if (background) background.style.opacity = move_percentage / 100; // cancel mouse onMove event if mouse pointer exceeded the drawer element
 
@@ -277,7 +265,7 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
       if (e.clientX >= drawer_current_pos - 1) drawer_handle_onMouseUp(e);
     }
   }, // eslint-disable-next-line react-hooks/exhaustive-deps
-  [handle_width, direction, width, isOpen, set_siblings_style]);
+  [handle_width, direction, width, isOpen]);
 
   const drawer_handle_onMouseDown = e => {
     // register first click position to calculate swipe distance later (on mouse up event).
@@ -289,8 +277,8 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
   };
 
   const drawer_handle_onMouseUp = (0, _react.useCallback)(e => {
-    const drawer = document.getElementById('Drawer_Wrapper');
-    const background = document.getElementById('Drawer-Background');
+    const drawer = drawerRef.current;
+    const background = backgroundRef.current;
     const moving_distance = e.clientX - x.current;
     const moving_direction = moving_distance < 0 ? 'left' : 'right';
     const moving_time = Date.now() - t.current;
@@ -321,14 +309,13 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
 
     t.current = Date.now(); // add on touch move event listener to the drawer element.
 
-    const drawer = document.getElementById('Drawer_Wrapper');
-    drawer.addEventListener('touchmove', drawer_handle_onTouchMove);
+    drawerRef.current.addEventListener('touchmove', drawer_handle_onTouchMove);
   };
 
   const drawer_handle_onTouchMove = (0, _react.useCallback)(e => {
     if (e.cancelable) e.preventDefault();
-    const drawer = document.getElementById('Drawer_Wrapper');
-    const background = document.getElementById('Drawer-Background');
+    const drawer = drawerRef.current;
+    const background = backgroundRef.current;
     if (background) background.style.display = 'block';
     const horizontal_distance = Math.abs(e.changedTouches[0].pageX - x.current);
     const verical_destance = Math.abs(e.changedTouches[0].pageY - y.current);
@@ -348,11 +335,10 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
     if (background) background.style.opacity = move_percentage / 100; // make the drawer tracks the touch.
 
     drawer.style[direction] = move_width + 'px';
-    set_siblings_style(move_width + width - handle_width);
-  }, [handle_width, direction, width, isOpen, set_siblings_style]);
+  }, [handle_width, direction, width, isOpen]);
   const drawer_handle_onTouchEnd = (0, _react.useCallback)(e => {
     isSwipe.current = null;
-    const drawer = document.getElementById('Drawer_Wrapper');
+    const drawer = drawerRef.current;
     const moving_distance = e.changedTouches[0].pageX - x.current;
     const moving_direction = moving_distance < 0 ? 'left' : 'right';
     const moving_time = Date.now() - t.current;
@@ -381,14 +367,13 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
 
     t.current = Date.now(); // add on touch move event listener to shaded background element.
 
-    const shaded = document.getElementById('Drawer-Background');
-    shaded.addEventListener('touchmove', shaded_onTouchMove);
+    backgroundRef.current.addEventListener('touchmove', shaded_onTouchMove);
   };
 
   const shaded_onTouchMove = (0, _react.useCallback)(e => {
     if (e.cancelable) e.preventDefault();
-    const drawer = document.getElementById('Drawer_Wrapper');
-    const background = document.getElementById('Drawer-Background'); // the value that change drawer position (track)
+    const drawer = drawerRef.current;
+    const background = backgroundRef.current; // the value that change drawer position (track)
 
     let move_width = direction === 'left' ? -width + e.targetTouches[0].pageX : -width + (window.innerWidth - e.targetTouches[0].pageX);
     move_width = Math.min(Math.max(move_width, -(width - handle_width)), 0); // change shaded background on drawer move.
@@ -397,11 +382,10 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
     if (background) background.style.opacity = move_percentage / 100; // make the drawer tracks the touch.
 
     drawer.style[direction] = move_width + 'px';
-    set_siblings_style(move_width + width - handle_width);
-  }, [direction, width, set_siblings_style, handle_width]);
+  }, [direction, width, handle_width]);
   const shaded_onTouchEnd = (0, _react.useCallback)(e => {
-    const shaded = document.getElementById('Drawer-Background');
-    const drawer = document.getElementById('Drawer_Wrapper');
+    const drawer = drawerRef.current;
+    const shaded = backgroundRef.current;
     const moving_distance = e.changedTouches[0].pageX - x.current;
     const moving_direction = moving_distance < 0 ? 'left' : 'right';
     const moving_time = Date.now() - t.current;
@@ -429,7 +413,7 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
   };
 
   const open = async () => {
-    const background = document.getElementById('Drawer-Background');
+    const background = backgroundRef.current;
     if (background) background.style.display = 'block';
     await wait(10);
     open_animation([-(width - handle_width), 0]);
@@ -443,7 +427,7 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
     toggle
   }));
   return /*#__PURE__*/_react.default.createElement(_react.default.Fragment, null, /*#__PURE__*/_react.default.createElement("div", {
-    id: "Drawer_Wrapper",
+    ref: drawerRef,
     style: _objectSpread({
       position: 'fixed',
       top: '0px',
@@ -466,21 +450,20 @@ const Drawer = /*#__PURE__*/(0, _react.forwardRef)((props, ref) => {
       touchAction: 'none'
     }
   }), /*#__PURE__*/_react.default.createElement("div", {
-    id: "Drawer_Container",
-    className: enableSrollbarStyle ? 'enable_scrollbar_custom_style' : '',
+    className: props.className,
+    id: props.id,
     style: _objectSpread(_objectSpread({}, drawer_style), {}, {
       width: width - handle_width + 'px',
       height: '100%',
       padding: '0px',
-      overflowX: 'hidden',
-      overflowY: 'auto'
+      overflow: 'hidden overlay'
     })
   }, props.children)), use_shaded_background ? /*#__PURE__*/_react.default.createElement("div", {
-    id: "Drawer-Background",
+    ref: backgroundRef,
     style: {
-      opacity: isOpen ? 1 : 0,
-      backgroundColor: background_color,
+      opacity: default_Status !== 'closed' ? 1 : 0,
       display: default_Status !== 'closed' ? 'block' : 'none',
+      backgroundColor: background_color,
       position: 'fixed',
       top: '0px',
       width: '100%',

@@ -1,27 +1,30 @@
 # react-js-drawer
 
-- Add native feeling to your web app and PWA by replicating Android native drawer.
+- Add native feeling to your web app and PWA by replicating Android/IOS native drawer.
 - Swipe from the screen edge to open the drawer.
 - Detect swipe momentum to open/close the drawer.
-- Swipe gesture avilable for touch and mouse input.
+- Swipe gestures are available for touch and mouse input.
 
-![](https://github.com/alabsi91/React-js-Drawer/blob/readme/UniConverter_20211001151937.gif?raw=true)
+![](https://github.com/alabsi91/react-js-drawer/blob/de95105e9b9496c8d2aea9589f619b3e2401b0a4/black-Drawer.gif?raw=true)
 
 # Drawer type standard
 
-- When `changePageWidth = true` the drawer shares the body width with the page (the page shrinks when drawer opens).
+- Drawer type standard appears beside the page (co-planar with page content).
+- Effects the page layout.
+- When [`changePageWidth`](#standardoptions--object-optional) is enabled the drawer shares the body width with the page (the page shrinks when drawer opens).
 
-![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawertypestandardwidthenabled.png)
+![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawertypestandardwidthenabled.png?raw=true)
 
-- When `changePageWidth = false` the drawer will add it's width to the body and scrollbar will appear.
+- When [`changePageWidth`](#standardoptions--object-optional) is disabled the drawer will push page content and add it's width to the body causing scrollbar to appear.
 
-![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawertypestandardwidthdisabled.png)
+![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawertypestandardwidthdisabled.png?raw=true)
 
 # Drawer type modal
 
-- The Drawer will appear on the top off the page.
+- Drawer type `modal` appears on the top off the page.
+- deosn't effect the page layout.
 
-![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawermodal.png)
+![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawermodal.png?raw=true)
 
 ## Installation
 
@@ -30,12 +33,13 @@
 ## How to use
 
 - Make sure to put the drawer on the top of your main page.
-- The drawer should have one sibling element for stability reasons.
+- The drawer should have one sibling element (the page) for stability reasons.
 
 ```jsx
+// ...
 import Drawer from 'react-js-drawer';
 
-export default function Index() {
+export default function App() {
   let drawerMethods = null;
 
   const openDrawerHandle = () => {
@@ -44,7 +48,7 @@ export default function Index() {
 
   return (
     <>
-      <Drawer ref={node => (drawerMethods = node)}>// ... drawer content</Drawer>
+      <Drawer ref={node => (drawerMethods = node)}>{/* ... drawer content */}</Drawer>
       // wrap the page contents with container
       <div>
         // ... page contents
@@ -59,21 +63,26 @@ export default function Index() {
 
 ### type : _[ 'modal' | 'standard' ] [optional]_
 
-- modal : show the drawer on top of the page (deosn't effect the page layout).
-- standard : show the drawer beside the page (effects the page layout).
+- `modal` : the drawer appears on top of the page (deosn't effect the page layout).
+- `standard` : the drawer appears beside the page (effects the page layout).
 - **Default Value** `modal`
 
 ### standardOptions : _[Object] [optional]_
 
 - Options for drawer type `standard` .
-- `changePageWidth?: boolean` chrink the page width to fit the drawer when it's open (co-planar with page content). (default :
-  false)
-- `preventPageScrolling?: boolean` Prevent the page from scrolling when the drawer is open. (default : false)
+
+|         Option         | Description                                                                           | Default |
+| :--------------------: | ------------------------------------------------------------------------------------- | :-----: |
+|   `changePageWidth`    | chrink the page width to fit the drawer when it's open (co-planar with page content). | `false` |
+| `preventPageScrolling` | Prevent the page from scrolling when the drawer is open.                              | `false` |
 
 ### modalOptions : _[Object] [optional]_
 
 - Options for drawer type `modal` .
-- `preventPageScrolling?: boolean` Prevent the page from scrolling when the drawer is open. (default : false)
+
+|         Option         | Description                                              | Default |
+| :--------------------: | -------------------------------------------------------- | :-----: |
+| `preventPageScrolling` | Prevent the page from scrolling when the drawer is open. | `false` |
 
 ### direction : _[ 'left' | 'right' ] [optional]_
 
@@ -92,9 +101,10 @@ export default function Index() {
 
 ### handleWidth : _[Number] [optional]_
 
-- The drawer handle width, the handle is unvisible element that receive swipe gesture input when the drawer is close.
+- The drawer handle width, the handle is unvisible element that receive swipe gesture input.
 - **Default Value** `20`
-- ![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawerclosed.png)
+
+![](https://github.com/alabsi91/react-js-drawer/blob/readme/drawerclosed.png?raw=true)
 
 ### handleBackgroundColor : _[String] [optional]_
 
@@ -103,16 +113,14 @@ export default function Index() {
 
 ### duration : _[Number] [optional]_
 
-- The drawer open and close animation duration.
+- Drawer open and close animation duration.
 - **Default Value** `200`
 
-### ease : _[String | Function] [optional]_
+### ease : _[ String | Function ] [optional]_
 
 - Drawer open and close animation transition timing function.
-- Easing functions specify the rate of change of the number over time.
+- Check [easings.net](https://easings.net/) to learn more.
 - **Default Value** `easeOutQuart`
-- Avaliable Easing functions :
-  `"linear", "easeInSine", "easeOutSine", "easeInOutSine", "easeInQuad", "easeOutQuad", "easeInOutQuad", "easeInCubic", "easeOutCubic", "easeInOutCubic", "easeInQuart", "easeOutQuart", "easeInOutQuart", "easeInQuint", "easeOutQuint", "easeInOutQuint", "easeInExpo", "easeOutExpo", "easeInOutExpo", "easeInCirc", "easeOutCirc", "easeInOutCirc", "easeInBack", "easeOutBack", "easeInOutBack", "easeInElastic", "easeOutElastic", "easeInOutElastic", "easeInBounce", "easeOutBounce", "easeInOutBounce"`
 - If you want to provide your own timing-function make sure that the function takes one parameter and returns one value.
 
 ```javascript
@@ -124,16 +132,11 @@ function easeInQuad(x) {
 ### enableMouseGestures : _[Boolean] [optional]_
 
 - Enable open and close drawer with mouse swipe gestures.
-- **Default Value** `true`
+- **Default Value** `false`
 
 ### enableTouchGestures : _[Boolean] [optional]_
 
 - Enable open and close drawer with touch swipe gestures.
-- **Default Value** `true`
-
-### scrollBarCustomStyle : _[Boolean] [optional]_
-
-- Enable drawer container scrollbar custom style.
 - **Default Value** `true`
 
 ### backgroundColor : _[Srting] [optional]_
@@ -144,6 +147,7 @@ function easeInQuad(x) {
 ### drawerStyle : _[Object] [optional]_
 
 - The drawer container style (React inline style object).
+- You can also use `id` or `className` attributes to add style from CSS StyleSheet.
 
 ### onOpen : _[Callback] [optional]_
 
@@ -152,10 +156,14 @@ function easeInQuad(x) {
 ### onClose : _[Callback] [optional]_
 
 - A callback fired when the drawer closes.
+### onMove : _[ (percent: Number) => void ] [optional]_
+
+- A callback fired everytime the drawer moves.
+- Takes the `percent` argument `(0-1)` that indicates the open percentage of the drawer.
 
 ### zIndex : _[Number] [optional]_
 
-- Drawer wraper z-index css value.
+- Drawer wrapper element z-index css value.
 - **Default Value** `100`
 
 ## Methods
